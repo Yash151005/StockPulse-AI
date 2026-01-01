@@ -208,16 +208,30 @@ if 'simulation_params' not in st.session_state:
 
 @st.cache_resource
 def get_snowflake_connection():
-    """Create Snowflake connection"""
+    """Create Snowflake connection - supports both local .env and Streamlit Secrets"""
     try:
-        conn = snowflake.connector.connect(
-            account=os.getenv('SNOWFLAKE_ACCOUNT'),
-            user=os.getenv('SNOWFLAKE_USERNAME'),
-            password=os.getenv('SNOWFLAKE_PASSWORD'),
-            warehouse=os.getenv('SNOWFLAKE_WAREHOUSE'),
-            database=os.getenv('SNOWFLAKE_DATABASE'),
-            schema='ANALYTICS',
-            role=os.getenv('SNOWFLAKE_ROLE')
+        # Try Streamlit secrets first (for cloud deployment)
+        if hasattr(st, 'secrets') and 'SNOWFLAKE_ACCOUNT' in st.secrets:
+            conn = snowflake.connector.connect(
+                account=st.secrets['SNOWFLAKE_ACCOUNT'],
+                user=st.secrets['SNOWFLAKE_USERNAME'],
+                password=st.secrets['SNOWFLAKE_PASSWORD'],
+                warehouse=st.secrets['SNOWFLAKE_WAREHOUSE'],
+                database=st.secrets['SNOWFLAKE_DATABASE'],
+                schema='ANALYTICS',
+                role=st.secrets.get('SNOWFLAKE_ROLE', 'ACCOUNTADMIN')
+            )
+        # Fall back to environment variables (for local development)
+        else:
+            conn = snowflake.connector.connect(
+                account=os.getenv('SNOWFLAKE_ACCOUNT'),
+                user=os.getenv('SNOWFLAKE_USERNAME'),
+                password=os.getenv('SNOWFLAKE_PASSWORD'),
+                warehouse=os.getenv('SNOWFLAKE_WAREHOUSE'),
+                database=os.getenv('SNOWFLAKE_DATABASE'),
+                schema='ANALYTICS',
+                role=os.getenv('SNOWFLAKE_ROLE')
+            )
         )
         return conn
     except Exception as e:
