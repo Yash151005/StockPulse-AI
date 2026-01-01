@@ -1,0 +1,21 @@
+{
+  "snowflake_connection": {
+    "account": "YOUR_ACCOUNT_LOCATOR",
+    "user": "YOUR_USERNAME",
+    "password": "YOUR_PASSWORD",
+    "warehouse": "STOCKPULSE_WH",
+    "database": "STOCKPULSE_AI",
+    "schema": "DATA",
+    "role": "STOCKPULSE_ADMIN"
+  },
+  "connection_notes": {
+    "account_locator": "Format: abc12345.region.cloud (e.g., xy12345.us-east-1.aws)",
+    "authentication": "Can also use key-pair authentication or SSO",
+    "warehouse": "Warehouse for running queries",
+    "role": "Use STOCKPULSE_ADMIN for full access, STOCKPULSE_USER for read-only dashboard access"
+  },
+  "alternative_authentication": {
+    "authenticator": "externalbrowser",
+    "note": "For SSO/browser-based authentication, use 'externalbrowser' as authenticator"
+  }
+}
