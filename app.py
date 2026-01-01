@@ -232,7 +232,6 @@ def get_snowflake_connection():
                 schema='ANALYTICS',
                 role=os.getenv('SNOWFLAKE_ROLE')
             )
-        )
         return conn
     except Exception as e:
         st.error(f"❌ Failed to connect to Snowflake: {str(e)}")
